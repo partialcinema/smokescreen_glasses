@@ -50,11 +50,16 @@ window.onload = () ->
   radius = 50
   center = new Point(view.center)
   path = new Path()
-  tool.onMouseDown = () ->
+  addSide = () ->
     onPerimeter = new Point(angle: angle, length: radius).add center
-    path.add onPerimeter
+    if (360 - angle) <= angleStepSize
+      path.closed = true
+    else
+      path.add onPerimeter
     angle += Math.random() * angleStepSize
     view.update()
-    
+  tool.onMouseDown = addSide
+  addSide()
+  #bleep
   #view.onFrame = () ->
     #view.update()
