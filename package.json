@@ -9,6 +9,7 @@
     "gulp-coffee": "latest",
     "gulp-sass": "^2.0.4",
     "gulp-util": "latest",
+    "requiredir": "^1.0.7",
     "wiredep": "latest"
   }
 }

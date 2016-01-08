@@ -1,25 +1,12 @@
 var gulp = require('gulp');
 
-function defineTask(name) {
-  // require task
-  var task = require('./tasks/' + name);
+var tasks = []
+// require all tasks in ./tasks
+var normalizedPath = require("path").join(__dirname, "tasks");
+require("fs").readdirSync(normalizedPath).forEach(function(file) {
+  var task = require("./tasks/" + file);
+  tasks.push(task);
+});
+gulp.task('all', tasks);
 
-  // parse task
-  var dependencies = null;
-  var func = null;
-  if(typeof task === "function") {
-    dependencies = [];
-    func = task;
-  } else {
-    dependencies = task.dependencies;
-    func = task.func;
-  }
-
-  // define task
-  gulp.task(name, dependencies, func);
-}
-
-module.exports = function(tasks) {
-  tasks.forEach(defineTask);
-  return gulp;
-};
+module.exports = gulp;
