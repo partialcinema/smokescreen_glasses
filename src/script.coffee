@@ -1,6 +1,7 @@
 util = require './util'
 IrregularPolygon = require './irregular-polygon'
 ChainLink = require './chain-link'
+Grass = require './grass'
 motion = require './motion'
 
 window.onload = () ->
@@ -28,3 +29,25 @@ window.onload = () ->
     return if skip
     pulsers.forEach (p) -> p.move()
     view.update()
+
+
+  grasses = []
+
+  tool.onKeyDown = (event) ->
+    if event.key is 'g' #spawn grass
+      randomSize = view.bounds.size.multiply Size.random()
+      bottom = new Point(randomSize.width, randomSize.height)
+
+      height = 200
+      g = new Grass(bottom, height)
+      grasses.push g
+
+    else if event.key is 'w' #gust of wind
+      console.log 'whooosh'
+      for blade in grasses
+        blade.wind()
+
+    else if event.key is 'q'
+      console.log 'unwhoosh'
+      for blade in grasses
+        blade.stopWind()
