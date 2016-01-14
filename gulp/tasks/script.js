@@ -1,13 +1,14 @@
 var gulp = require('gulp');
 var coffee = require('gulp-coffee');
-//var gutil = require('gulp-util');
+var gutil = require('gulp-util');
 var source = require('vinyl-source-stream');
 var browserify = require('browserify');
+var reportError = require('../report-error');
 
 var scriptTask = function () {
   return browserify('./src/script.coffee', { extensions: ['.coffee'] })
     .transform('coffeeify')
-    .bundle()
+    .bundle().on('error', reportError)
     .pipe(source('script.js'))
     .pipe(gulp.dest('./public'));
 };
