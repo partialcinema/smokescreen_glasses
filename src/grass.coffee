@@ -38,7 +38,6 @@ Grass = (bottom, height) ->
   rightPath.segments[2].handleIn = rightPath.segments[2].handleIn.add(radius, radius)
 
   blade = new Group([leftPath, rightPath])
-  blade.rotate(90, bottom)
 
   isBlowing = false
   intervalId = null
@@ -46,15 +45,30 @@ Grass = (bottom, height) ->
   this.wind = () ->
     isBlowing = true
     rotate = () -> blade.rotate(5, bottom)
-    intervalId = setInterval(rotate, 20)
+    rotateIntervalId = setInterval(rotate, 20)
 
   this.stopWind = () ->
     isBlowing = false
-    clearInterval(intervalId)
+    clearInterval(rotateIntervalId)
 
+
+
+  this.grow = (amount) ->
+    console.log blade.leftPath.segments[2]
+
+    #view.onFrame(event) ->
+
+
+  this.shrink = (amount) -> #
+    shrinkSegment = () ->
+      for path in blade
+        path.segments[2].point.y += amount
+
+    shrinkIntervalID = setInterval(shrinkSegment(), 30)
+
+
+
+#########################
   view.update()
-  this
-
-
 
 module.exports = Grass
