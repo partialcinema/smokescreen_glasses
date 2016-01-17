@@ -59,10 +59,10 @@ Grass = (bottom, height) ->
         path.segments[1].point.y += amount
         path.segments[2].point.y += amount
 
-    if amount > 0
+    if amount > 0 # shrinking; makes sure the shoulder of the blade doesn't go below the bottom
       if blade.children[0].segments[1].point.y < blade.children[0].segments[0].point.y - amount
         shrinkSegment(amount)
-    else
+    else # Growing
       shrinkSegment(amount)
 
 

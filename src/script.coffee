@@ -32,19 +32,19 @@ window.onload = () ->
     i += 1
     return if skip
     pulsers.forEach (p) -> p.move()
+    grasses.forEach (g) -> g.move() #grasping at straws here...
     view.update()
 
   grasses = []
-
   tool.onKeyDown = (event) ->
     if event.key is 'g' #spawn grass
       randomSize = view.bounds.size.multiply Size.random()
       bottom = new Point(randomSize.width, randomInterval(view.bounds.size.height * 0.5, view.bounds.size.height))
-      #console.log bottom #debug
       height = randomInterval(100, 200)
-
       g = new Grass(bottom, height)
-      grasses.push g
+
+      grasses.push new motion.Sway g.blade # should add the sway motion... not sure what's up, but it breaks shrinking/growing
+      #grasses.push g
 
     # wind
     else if event.key is 'w' # start wind
@@ -63,7 +63,7 @@ window.onload = () ->
 
     else if event.key is 'a' #shrink
       for blade in grasses
-        blade.shrink(5)
+          blade.shrink(5)
 
   tool.onMouseMove = (event) ->
     null
