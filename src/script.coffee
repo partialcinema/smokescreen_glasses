@@ -59,7 +59,7 @@ window.onload = () ->
 
     else if event.key is 's' # grow
       for blade in grasses
-        blade.grow(5)
+        blade.shrink(-5)
 
     else if event.key is 'a' #shrink
       for blade in grasses
