@@ -40,7 +40,7 @@ Grass = (bottom, height) ->
   blade = new Group([leftPath, rightPath])
 
   isBlowing = false
-  intervalId = null
+  rotateIntervalId = null
 
   this.wind = () ->
     isBlowing = true

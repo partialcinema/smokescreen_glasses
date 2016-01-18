@@ -12,6 +12,5 @@ module.exports.Sway = (item) ->
   saw = new signal.Saw()
   this.move = () ->
     delta = saw.next()
-    #item.rotate(delta, item.bottom)
-    console.log item
+    #item.blade.rotate(delta, item.blade.bottom)
   this
