@@ -3,6 +3,7 @@ IrregularPolygon = require './irregular-polygon'
 ChainLink = require './chain-link'
 Grass = require './grass'
 motion = require './motion'
+periodic = require './periodic'
 
 
 randomInterval = (min, max) ->
@@ -17,22 +18,25 @@ window.onload = () ->
   project.currentStyle.strokeWidth = 5
   tool = new Tool()
   center = new Point(view.center)
-  pulsers = []
   tool.onMouseDown = () ->
     randomSize = view.bounds.size.multiply Size.random()
     center = new Point(randomSize.width, randomSize.height)
     cl = new ChainLink(center, 50, 60)
-    ip = new IrregularPolygon(center, cl.pointFor)
+    ip = new IrregularPolygon(center, cl)
     ip.complete()
-    pulsers.push new motion.Pulser ip.path
+    periodic.pulse 1000, ip.path
 
   i = 0
   view.onFrame = () ->
     skip = (i % 2) is 0
     i += 1
     return if skip
+<<<<<<< HEAD
     pulsers.forEach (p) -> p.move()
     #grasses.forEach (g) -> g.move() # doing what it's supposed to, but suuuuper lags
+=======
+    grasses.forEach (g) -> g.move() #grasping at straws here...
+>>>>>>> b21cf49b321ce5c46b05292842e7776bbc9ff5e5
     view.update()
 
   grasses = []
