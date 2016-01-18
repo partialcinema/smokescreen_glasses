@@ -7,3 +7,11 @@ module.exports.Pulser = (item) ->
     delta = 1.5 * saw.next()
     item.bounds = item.bounds.expand delta, delta
   this
+
+module.exports.Sway = (item) ->
+  saw = new signal.Saw()
+  this.move = () ->
+    delta = saw.next()
+    #item.rotate(delta, item.bottom)
+    console.log item
+  this

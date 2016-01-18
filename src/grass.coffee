@@ -53,18 +53,17 @@ Grass = (bottom, height) ->
 
 
 
-  this.grow = (amount) ->
-    console.log blade.leftPath.segments[2]
-
-    #view.onFrame(event) ->
-
-
   this.shrink = (amount) -> #
-    shrinkSegment = () ->
-      for path in blade
+    shrinkSegment = (amount) ->
+      for path in blade.children
+        path.segments[1].point.y += amount
         path.segments[2].point.y += amount
 
-    shrinkIntervalID = setInterval(shrinkSegment(), 30)
+    if amount > 0 # shrinking; makes sure the shoulder of the blade doesn't go below the bottom
+      if blade.children[0].segments[1].point.y < blade.children[0].segments[0].point.y - amount
+        shrinkSegment(amount)
+    else # Growing
+      shrinkSegment(amount)
 
 
 
