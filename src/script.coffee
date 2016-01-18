@@ -31,12 +31,8 @@ window.onload = () ->
     skip = (i % 2) is 0
     i += 1
     return if skip
-<<<<<<< HEAD
-    pulsers.forEach (p) -> p.move()
-    #grasses.forEach (g) -> g.move() # doing what it's supposed to, but suuuuper lags
-=======
-    grasses.forEach (g) -> g.move() #grasping at straws here...
->>>>>>> b21cf49b321ce5c46b05292842e7776bbc9ff5e5
+    #grasses.forEach (g) -> g.move()
+
     view.update()
 
   grasses = []
@@ -47,7 +43,7 @@ window.onload = () ->
       height = randomInterval(100, 200)
       g = new Grass(bottom, height)
 
-      #grasses.push new motion.Sway g.blade # should add the sway motion... not sure what's up, but it breaks shrinking/growing
+      #grasses.push new motion.Sway g # should add the sway motion... not sure what's up, but it breaks shrinking/growing
       grasses.push g
 
     # wind
