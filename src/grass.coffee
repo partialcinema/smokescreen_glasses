@@ -40,20 +40,19 @@ Grass = (bottom, height) ->
   blade = new Group([leftPath, rightPath])
 
   isBlowing = false
-  intervalId = null
+  rotateIntervalId = null
 
-  this.wind = () ->
+  wind = () ->
     isBlowing = true
     rotate = () -> blade.rotate(5, bottom)
     rotateIntervalId = setInterval(rotate, 20)
 
-  this.stopWind = () ->
+  stopWind = () ->
     isBlowing = false
     clearInterval(rotateIntervalId)
 
 
-
-  this.shrink = (amount) -> #
+  shrink = (amount) -> #
     shrinkSegment = (amount) ->
       for path in blade.children
         path.segments[1].point.y += amount
@@ -65,6 +64,11 @@ Grass = (bottom, height) ->
     else # Growing
       shrinkSegment(amount)
 
+  # Public Interface
+  this.blade = blade
+  this.wind = wind
+  this.stopWind = stopWind
+  this.shrink = shrink
 
 
 #########################

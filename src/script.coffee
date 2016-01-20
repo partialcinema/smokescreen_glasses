@@ -31,7 +31,8 @@ window.onload = () ->
     skip = (i % 2) is 0
     i += 1
     return if skip
-    grasses.forEach (g) -> g.move() #grasping at straws here...
+    #grasses.forEach (g) -> g.move()
+
     view.update()
 
   grasses = []
@@ -42,8 +43,8 @@ window.onload = () ->
       height = randomInterval(100, 200)
       g = new Grass(bottom, height)
 
-      grasses.push new motion.Sway g.blade # should add the sway motion... not sure what's up, but it breaks shrinking/growing
-      #grasses.push g
+      #grasses.push new motion.Sway g # should add the sway motion... not sure what's up, but it breaks shrinking/growing
+      grasses.push g
 
     # wind
     else if event.key is 'w' # start wind
