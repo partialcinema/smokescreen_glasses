@@ -12,6 +12,7 @@ var scriptTask = function () {
     .pipe(source('index.js'))
     .pipe(gulp.dest('./public'));
 };
+
 gulp.task('script', scriptTask);
 // Transpile CoffeeScript
 //var coffeeTask = function() {

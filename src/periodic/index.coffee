@@ -1,5 +1,4 @@
-_ = require 'lodash'
-signal = require './signal'
+signals = require './signal'
 
 intervalIds = {}
 
@@ -61,5 +60,5 @@ stop = (item) ->
 
 module.exports =
   stop: stop
-  pulse: scheduleMotion scaleBounds, signal.SawIntegral
-  sway: scheduleMotion phaseSegments, signal.Sine
+  pulse: scheduleMotion scaleBounds, signals.SawIntegral
+  sway: scheduleMotion phaseSegments, signals.Sine
