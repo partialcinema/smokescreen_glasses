@@ -1,5 +1,17 @@
 mth = require './mth'
 
+# Signal functions are defined on the domain [0, 1).
+# They don't have to be periodic. makeSignalConstructor
+# uses the modulo function to *make* them periodic.
+
+saw = (x) ->
+  numerator = 2 * x
+  numerator - 1
+
+sawIntegral = (x) ->
+  numerator = x - 1
+  8 * x * (x - 1) + 1
+
 movingAverage = (memorySize, func) ->
   movingWindow = new mth.MovingWindow(memorySize)
   (args...) ->
@@ -7,29 +19,39 @@ movingAverage = (memorySize, func) ->
     movingWindow.push result
     movingWindow.average()
 
-module.exports.movingAverage = movingAverage
+CreepySaw = (memorySize) ->
+  # Construct a function that returns the average
+  # of the most recent values of saw.
+  # This is filters out higher frequencies.
+  filtered = movingAverage memorySize, saw
+  (x) -> filtered x
 
-Saw = (samplesPerPeriod) ->
-  x = 0.0
-  this.next = () ->
-    result = 2.0 * (x - Math.floor(x)) - 1
-    x += 0.01
-    result
-  this
+# Use signal functions above
+# to define constructors for periodic
+# signal generators.
+makeSignalConstructor = (signal) ->
+  SignalConstructor = (period, phaseOffset = 0, signalMin = -1, signalMax = 1) ->
+    x = phaseOffset
+    incrementAmount = 1 / period
+    getNextX = () ->
+      result = x % 1
+      x += incrementAmount
+      result
+    # map x to new the range [signalMin, signalMax]
+    mapOutput = mth.mapRange(-1, 1, signalMin, signalMax)
 
-module.exports.Saw = Saw
+    next = () ->
+      result = signal getNextX()
+      # signal functions have a default output range of [-1, 1]
+      if signalMin is -1 and signalMax is 1
+        result
+      else
+        result = mapOutput result
+      result
+    next
+  SignalConstructor
 
-SawAntiderivative = (samplesPerPeriod) ->
-  x = 0
-  this.next = () ->
-    x * (x - period)
-
-DarkSaw = (samplesPerPeriod) ->
-  saw = new Saw()
-  filtered = movingAverage 15, saw.next
-  this.next = filtered
-  this
-
-module.exports.DarkSaw = DarkSaw
-
-
+module.exports =
+  Saw: makeSignalConstructor saw
+  SawIntegral: makeSignalConstructor sawIntegral
+  CreepySaw: makeSignalConstructor new CreepySaw(15)

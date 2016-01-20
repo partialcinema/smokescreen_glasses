@@ -10,4 +10,12 @@ MovingWindow = (memorySize) ->
   this.average = () ->
     _.sum(contents) / contents.length
   this
-module.exports.MovingWindow = MovingWindow
+
+mapRange = _.curry (oldMin, oldMax, newMin, newMax, input) ->
+  oldRange = oldMax - oldMin
+  newRange = newMax - newMin
+  (((input - oldMin) * newRange) / oldRange) + newMin
+
+module.exports =
+  MovingWindow: MovingWindow
+  mapRange: mapRange

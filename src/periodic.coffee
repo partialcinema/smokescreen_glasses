@@ -3,20 +3,23 @@ signal = require './signal'
 
 intervalIds = {}
 
-
 pulse = (seconds, item, updatesPerSecond = 30) ->
   samplesPerPeriod = seconds * updatesPerSecond
-  #saw = new signal.DarkSaw(sampleRate)
-  #saw = new signal.Saw(sampleRate)
-  signal = new signal.SawAntiderivative(samplesPerPeriod)
+  nextSignalValue = new signal.SawIntegral(samplesPerPeriod, 0.5, 1.5)
   originalBounds = item.bounds
   move = () ->
     # need to figure this function out
-    delta = 1.5 * saw.next()
-    item.bounds = item.bounds.expand delta, delta
+    #delta = 1.5 * saw.next()
+    #item.bounds = item.bounds.expand delta, delta
+    newBounds = originalBounds.scale nextSignalValue()
+    item.bounds = newBounds
+    view.update()
   schedule updatesPerSecond, item.id, move
 
 stop = (item) ->
+  # this will only cancel the most recent animation
+  # applied to an object. how do we handle multiple
+  # animations on one object?
   intervalId = intervalIds[item.id]
   clearInterval(intervalId)
 
