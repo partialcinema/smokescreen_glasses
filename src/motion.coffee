@@ -1,4 +1,4 @@
-signal = require './signal'
+signal = require './periodic/signal'
 
 module.exports.Pulser = (item) ->
   #saw = new signal.DarkSaw()

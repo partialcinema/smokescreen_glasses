@@ -6,10 +6,10 @@ var browserify = require('browserify');
 var reportError = require('../report-error');
 
 var scriptTask = function () {
-  return browserify('./src/script.coffee', { extensions: ['.coffee'] })
+  return browserify('./src/index.coffee', { extensions: ['.coffee'] })
     .transform('coffeeify')
     .bundle().on('error', reportError)
-    .pipe(source('script.js'))
+    .pipe(source('index.js'))
     .pipe(gulp.dest('./public'));
 };
 gulp.task('script', scriptTask);
