@@ -24,7 +24,8 @@ window.onload = () ->
     cl = new ChainLink(center, 50, 60)
     ip = new IrregularPolygon(center, cl)
     ip.complete()
-    periodic.pulse 3, ip.path, 15
+    #periodic.pulse 3, ip.path, 15
+    periodic.sway 1, ip.path, 15
 
   i = 0
   view.onFrame = () ->

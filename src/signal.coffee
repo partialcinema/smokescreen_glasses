@@ -12,6 +12,9 @@ sawIntegral = (x) ->
   numerator = x - 1
   8 * x * (x - 1) + 1
 
+sine = (x) ->
+  Math.sin(2 * Math.PI * x)
+
 movingAverage = (memorySize, func) ->
   movingWindow = new mth.MovingWindow(memorySize)
   (args...) ->
@@ -23,6 +26,8 @@ CreepySaw = (memorySize) ->
   # Construct a function that returns the average
   # of the most recent values of saw.
   # This is filters out higher frequencies.
+  # In theory. Seems to be doing something...
+  # weirder right now.
   filtered = movingAverage memorySize, saw
   (x) -> filtered x
 
@@ -52,6 +57,7 @@ makeSignalConstructor = (signal) ->
   SignalConstructor
 
 module.exports =
+  Sine: makeSignalConstructor sine
   Saw: makeSignalConstructor saw
   SawIntegral: makeSignalConstructor sawIntegral
   CreepySaw: makeSignalConstructor new CreepySaw(15)

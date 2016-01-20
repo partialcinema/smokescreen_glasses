@@ -3,18 +3,44 @@ signal = require './signal'
 
 intervalIds = {}
 
-pulse = (seconds, item, updatesPerSecond = 30) ->
-  samplesPerPeriod = seconds * updatesPerSecond
-  nextSignalValue = new signal.SawIntegral(samplesPerPeriod, 0.5, 1.5)
+# motion functions
+# TODO: basically, motion functions map signals onto paper.js properties (bounds, segment.position, etc.)
+# Any motion function will work equally well with any signal.
+# As such, the TODO is to refactor this module so that motion functions can be composed from a signal
+# and a paper.js mapping function (mapToBounds, mapToOrthogonalSegmentPoint, etc.)
+
+pulse = (samplesPerPeriod, item) ->
+  nextSignalValue = new signal.Sine(samplesPerPeriod, 0, 0.5, 1.5)
   originalBounds = item.bounds
-  move = () ->
-    # need to figure this function out
-    #delta = 1.5 * saw.next()
-    #item.bounds = item.bounds.expand delta, delta
+  () ->
     newBounds = originalBounds.scale nextSignalValue()
     item.bounds = newBounds
     view.update()
-  schedule updatesPerSecond, item.id, move
+
+sway = (samplesPerPeriod, path, swayDistance = 5) ->
+  defineData = (segment, phaseOffset) ->
+    segment.data ?= {}
+    segment.data.signal ?= new signal.Sine(samplesPerPeriod, phaseOffset)
+    segment.data.originalPoint ?= segment.point.clone()
+  swaySegment = (s) ->
+    offset = path.getOffsetOf s.point
+    defineData s, offset
+    normal = path.getNormalAt offset
+    swayMagnitude = swayDistance * s.data.signal()
+    s.point = s.data.originalPoint.add normal.multiply swayMagnitude
+  () ->
+    path.segments.forEach swaySegment
+
+
+scheduleMotion = (motion) ->
+  (seconds, item, updatesPerSecond = 30, otherArguments...) ->
+    samplesPerPeriod = seconds * updatesPerSecond
+    move = motion(samplesPerPeriod, item, otherArguments...)
+    schedule updatesPerSecond, item.id, move
+
+schedule = (updatesPerSecond, key, func) ->
+  millisecondsBetweenUpdates = 1000 / updatesPerSecond
+  intervalIds[key] = setInterval func, millisecondsBetweenUpdates
 
 stop = (item) ->
   # this will only cancel the most recent animation
@@ -23,12 +49,9 @@ stop = (item) ->
   intervalId = intervalIds[item.id]
   clearInterval(intervalId)
 
-schedule = (updatesPerSecond, key, func) ->
-  millisecondsBetweenUpdates = 1000 / updatesPerSecond
-  intervalIds[key] = setInterval func, millisecondsBetweenUpdates
 
-periodic =
+
+module.exports =
   stop: stop
-  pulse: pulse
-
-module.exports = periodic
+  pulse: scheduleMotion pulse
+  sway: scheduleMotion sway
